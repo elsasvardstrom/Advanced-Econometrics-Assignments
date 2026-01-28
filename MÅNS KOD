@@ -1,1 +1,56 @@
-#hej här kommer min kod
+#### Problem 1 ---- 
+x <- c(4.06, 3.63, 0.41, 2.45, 0.22, 3.39, 0.27, 0.69, 0.32,
+                 0.09, 4.00, 3.63, 2.65, 3.06, 3.77, 2.29, 2.31, 1.51)
+y <- c(168.44, 178.66, 58.81, 189.29, 14.79, 178.70, 103.69, 103.30, 57.30,
+                 15.10, 172.28, 172.30, 194.32, 193.20, 167.50, 191.50, 173.98, 174.60)
+
+data1 <- data.frame(x = x, y = y)
+
+#Checking the data
+View(data1)
+summary(data1) 
+
+## a) Least squares estimator
+
+#Algebraic calculations for the least squares estimator
+y_log <- log(y) #Log transform y
+X <- cbind(1, x, log(x)) #Log transform X: intercept, regressor x_i, regressor ln(x_i)
+
+#Quick check
+y_log
+X
+
+#Algebraically beta_hat = (X´X)^-1 X´log(y))
+beta_hat <- solve(t(X) %*% X) %*% (t(X) %*% y_log)
+beta_hat
+
+## b) Plotted data with fitted model
+
+y_hat_log <- X %*% beta_hat #Fitted values in a log-scale
+y_hat <- exp(y_hat_log) #Fitted values in an original scale
+
+#Scatter plot
+plot(x,y,
+     main = "Data with fitted model",
+     xlab = "x_transpose",
+     ylab = "y_transpose")
+
+ord <- order(x)
+lines(x[ord], y_hat[ord], col = "red")
+
+## c) Maximizer x of y_hat
+
+#Extracting the coefficients
+b0 <- beta_hat[1,1]
+b1 <- beta_hat[2,1]
+b2 <- beta_hat[3,1]
+
+#Value of x that maximizes fitted function y_hat(x)
+x_max <- -b2/b1
+
+#Maximized fitted value
+y_hat_max <- exp(b0) * exp(b1 * x_max) * (x_max^b2)
+
+#Output from previous equation
+x_max #x value that maximizes y_hat
+y_hat_max #y_hat value for the maximized x-value

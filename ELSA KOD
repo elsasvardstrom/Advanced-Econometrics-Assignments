@@ -1,1 +1,66 @@
-# Hej här kommer jag klistra in min kod
+# Homework assignment 1 - elsa 
+setwd("~/Desktop/AD ECONOMERICS")
+library(ggplot2)
+
+set.seed(030214)
+
+# Read the data
+df <- read.table("cps09mar.txt", header = FALSE, sep = "", dec = ".")
+View(df)
+colnames(df) <- c("age","female","hisp","edu","earn","hours", "week",
+                  "union","uncov","region","race","marital")
+names(df)
+
+# Consider the model yi = e^β_0 e^(β_1x_i) x_i^β_2 e^εi where ε_i is an error term.
+# Compute the least square estimate of the parameters β= [β0 β1 β2]T
+
+x_T <- c(4.06, 3.63, 0.41, 2.45, 0.22, 3.39, 0.27, 0.69, 0.32,
+       0.09, 4.00, 3.63, 2.65, 3.06, 3.77, 2.29, 2.31, 1.51)
+y_T <- c(168.44, 178.66, 58.81, 189.29, 14.79, 178.70, 103.69, 103.30, 57.30,
+       15.10, 172.28, 172.30, 194.32, 193.20, 167.50, 191.50, 173.98, 174.60)
+
+data1 <- data.frame(x = x_T, y = y_T)
+View(data1)
+summary(data1)
+
+#### PROBLEM 1 #####------------------------------------------------------------
+### 1(a) Least square estimator ###
+lny <- log(y_T)
+X <- cbind(1, x_T, log(x_T))
+
+beta_hat <- solve(t(X) %*% X) %*% (t(X) %*% lny)
+round(beta_hat, digits = 4)
+# OLS-residualer ska vara ortogonala mot X:
+ehat <- lny - X %*% beta_hat
+t(X) %*% ehat # ska bli nästan 0
+
+### 1(b) Scatterplot ###
+# Fitted values from 1(a)
+b0 <- beta_hat[1]
+b1 <- beta_hat[2]
+b2 <- beta_hat[3]
+# Fitted values 
+y_hat_log <- X %*% beta_hat # on log scale
+y_hat_or <- exp(y_hat_log) # on orginal scale
+# scatterplot
+pdf("problem1b_fitted_model.pdf", width = 6, height = 4)
+plot(x_T, y_T,
+     main = "Data and fitted regression model",
+     xlab = "x",
+     ylab = "y",
+     pch = 16, col = "darkorange")
+ord <- order(x_T)
+lines(x_T[ord], y_hat[ord], lwd = 2, col = "cornflowerblue")
+legend("bottomright",
+       legend = c("Observed data", "Fitted model"),
+       pch    = c(16, NA),
+       lwd    = c(NA, 2),
+       col    = c("darkorange", "cornflowerblue"),
+       bty    = "n")
+dev.off()
+
+### c) Maximizer x of y_hat ###
+x_star <- -b2/b1
+x_star
+yhat_star <- exp(b0) * exp(b1 * x_star) * (x_star^b2)
+yhat_star

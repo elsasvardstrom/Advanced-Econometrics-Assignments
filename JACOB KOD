@@ -1,1 +1,90 @@
-# HEEEEJ
+# Hello, here comes the code for problem 2 of HWA1. All code is commented on and should run smoothly without the need to install additional packages.
+
+
+set.seed(021116)  #reproducible
+
+
+
+#Read the dataset into R
+data <- read.table("cps09mar.txt", header = TRUE)
+
+View(data)
+names(data)
+
+
+
+
+###Preperation###---------------------------------------------------------------
+
+x1 <- data[[5]] #Earningsbt
+x2 <- data[[6]] #Hours
+x3 <- data[[4]] #Education
+
+
+beta <- c(20, 0.03, 0.7, 1.4)  #beta0, beta1, beta2, beta3
+sigma2 <- 6
+sigma  <- sqrt(sigma2)
+
+X_true <- cbind(1, x1, x2, x3)   #This is the true DGP, uses all regressors
+X_mis  <- cbind(1, x1, x3)       #Misspecified model which only uses x1 & x2
+
+
+
+
+###OLS function using matrix formula###-----------------------------------------
+
+ols_beta <- function(X, y) {
+  solve(t(X) %*% X, t(X) %*% y) #Solve for the function: beta_hat = (X'X)^{-1} X'y
+}
+
+
+
+###Monte Carlo simulation###----------------------------------------------------
+
+S <- 300
+n <- length(x1) #Same length of all variables so we just take one to produce our n
+beta1_hat <- numeric(S)  #stores coefficient on x1 from misspecified model
+
+#Loop 300 times
+for (s in 1:S) {
+  eps <- rnorm(n, mean = 0, sd = sigma) #error term follows: N(0, sigma^2 I)
+  y <- as.vector(X_true %*% beta + eps) #Genrates dependent variable y
+  
+  b_mis <- ols_beta(X_mis, y) #estimates the misspecification
+  beta1_hat[s] <- b_mis[2]  #x1 is index 2 in b_mis, thus we extract it from there
+}
+
+
+
+
+###Histogram###-----------------------------------------------------------------
+
+hist(beta1_hat,
+     breaks = 25,
+     main = expression(paste("Monte Carlo distribution of ", hat(beta)[1], " (misspecified)")),
+     xlab  = expression(hat(beta)[1]))
+abline(v = beta[2])   #true beta1 is 0.03 and lays outside the estimated distribution of beta1, thus it does not show up in the histogram at all.
+
+
+
+
+###MC summary with mean, sd, SE and CI###---------------------------------------
+
+mc_mean <- mean(beta1_hat)
+mc_sd   <- sd(beta1_hat)                 
+mc_se   <- mc_sd / sqrt(S)      
+ci_95   <- mc_mean + c(-1, 1) * 1.96 * mc_se
+
+
+#Table with values. Bias is estimated mean - true value.
+mc_table <- data.frame(
+  True_beta1 = beta[2],
+  MC_Mean    = mc_mean,
+  Bias       = mc_mean - beta[2],
+  MC_SD      = mc_sd,
+  MC_SE      = mc_se,
+  CI_Low     = ci_95[1],
+  CI_High    = ci_95[2]
+)
+
+mc_table

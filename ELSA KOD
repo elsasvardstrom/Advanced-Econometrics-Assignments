@@ -1,9 +1,4 @@
 # Homework assignment 1 - elsa 
-setwd("~/Desktop/AD ECONOMERICS")
-library(ggplot2)
-
-set.seed(030214)
-
 # Read the data
 df <- read.table("cps09mar.txt", header = FALSE, sep = "", dec = ".")
 View(df)
@@ -20,7 +15,6 @@ y_T <- c(168.44, 178.66, 58.81, 189.29, 14.79, 178.70, 103.69, 103.30, 57.30,
        15.10, 172.28, 172.30, 194.32, 193.20, 167.50, 191.50, 173.98, 174.60)
 
 data1 <- data.frame(x = x_T, y = y_T)
-View(data1)
 summary(data1)
 
 #### PROBLEM 1 #####------------------------------------------------------------
@@ -43,7 +37,6 @@ b2 <- beta_hat[3]
 y_hat_log <- X %*% beta_hat # on log scale
 y_hat_or <- exp(y_hat_log) # on orginal scale
 # scatterplot
-pdf("problem1b_fitted_model.pdf", width = 6, height = 4)
 plot(x_T, y_T,
      main = "Data and fitted regression model",
      xlab = "x",
@@ -57,7 +50,6 @@ legend("bottomright",
        lwd    = c(NA, 2),
        col    = c("darkorange", "cornflowerblue"),
        bty    = "n")
-dev.off()
 
 ### c) Maximizer x of y_hat ###
 x_star <- -b2/b1

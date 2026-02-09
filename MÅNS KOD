@@ -16,7 +16,7 @@ summary(data1)
 y_log <- log(y) #Log transform y
 X <- cbind(1, x, log(x)) #Log transform X: intercept, regressor x_i, regressor ln(x_i)
 
-#Quick check
+#Sanity check
 y_log
 X
 
@@ -31,12 +31,19 @@ y_hat <- exp(y_hat_log) #Fitted values in an original scale
 
 #Scatter plot
 plot(x,y,
-     main = "Data with fitted model",
-     xlab = "x_transpose",
-     ylab = "y_transpose")
+     main = "Data with fitted regression model",
+     xlab = "x",
+     ylab = "y",
+pch = 19, col = "darkorange")
 
 ord <- order(x)
 lines(x[ord], y_hat[ord], col = "red")
+legend("bottomright",
+       legend = c("Observed data", "Fitted model"),
+       pch    = c(16, NA),
+       lwd    = c(NA, 2),
+       col    = c("darkorange", "cornflowerblue"),
+       bty    = "n")
 
 ## c) Maximizer x of y_hat
 

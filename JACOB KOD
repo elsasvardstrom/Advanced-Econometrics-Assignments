@@ -1,11 +1,10 @@
-#This is the full code for hwa1. Should run without any problem and have no external packages used.
-
 ###PROBLEM 1####----------------------------------------------------------------
 ### Loading Data ###
 x_T <- c(4.06, 3.63, 0.41, 2.45, 0.22, 3.39, 0.27, 0.69, 0.32,
        0.09, 4.00, 3.63, 2.65, 3.06, 3.77, 2.29, 2.31, 1.51)
 y_T <- c(168.44, 178.66, 58.81, 189.29, 14.79, 178.70, 103.69, 103.30, 57.30,
        15.10, 172.28, 172.30, 194.32, 193.20, 167.50, 191.50, 173.98, 174.60)
+
 
 ### 1(a) Least square estimator ###
 lny <- log(y_T)
@@ -16,6 +15,7 @@ round(beta_hat, digits = 4)
 # OLS-residuals should be orthogonal against X:
 ehat <- lny - X %*% beta_hat
 t(X) %*% ehat # Will be next 0
+
 
 ### 1(b) Scatterplot ###
 # Fitted values from 1(a)
@@ -40,6 +40,7 @@ legend("bottomright",
        col    = c("darkorange", "cornflowerblue"),
        bty    = "n")
 
+
 ### c) Maximizer x of y_hat ###
 x_star <- -b2/b1
 x_star
@@ -50,14 +51,8 @@ yhat_star
 
 
 
-
-
-
-
 ###Problem 2###-----------------------------------------------------------------
 set.seed(021116)  #reproducible
-
-
 
 #Read the dataset into R
 df <- read.table("cps09mar.txt", header = FALSE, sep = "", dec = ".")
@@ -72,7 +67,6 @@ x1 <- df$earn #Earnings
 x2 <- df$hours #Hours
 x3 <- df$edu #Education
 
-
 beta <- c(20, 0.03, 0.7, 1.4)  #beta0, beta1, beta2, beta3
 sigma2 <- 6
 sigma  <- sqrt(sigma2)
@@ -81,14 +75,11 @@ X_true <- cbind(1, x1, x2, x3)   #This is the true DGP, uses all regressors
 X_mis  <- cbind(1, x1, x3)       #Misspecified model which only uses x1 & x2
 
 
-
-
 ### OLS function using matrix formula ###
 
 ols_beta <- function(X, y) {
   solve(t(X) %*% X, t(X) %*% y) #Solve for the function: beta_hat = (X'X)^{-1} X'y
 }
-
 
 
 ### Monte Carlo simulation ###
@@ -107,8 +98,6 @@ for (s in 1:S) {
 }
 
 
-
-
 ### Histogram ###
 
 hist(beta1_hat,
@@ -118,15 +107,12 @@ hist(beta1_hat,
 abline(v = beta[2])   #true beta1 is 0.03 and lays outside the estimated distribution of beta1, thus it does not show up in the histogram at all.
 
 
-
-
 ### MC summary with mean, sd, SE and CI ###
 
 mc_mean <- mean(beta1_hat)
 mc_sd   <- sd(beta1_hat)                 
 mc_se   <- mc_sd / sqrt(S)      
 ci_95   <- mc_mean + c(-1, 1) * 1.96 * mc_se
-
 
 #Table with values. Bias is estimated mean - true value.
 mc_table <- data.frame(
@@ -140,6 +126,3 @@ mc_table <- data.frame(
 )
 
 mc_table
-
-
-

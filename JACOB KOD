@@ -24,7 +24,7 @@ b1 <- beta_hat[2]
 b2 <- beta_hat[3]
 # Fitted values 
 y_hat_log <- X %*% beta_hat # on log scale
-y_hat_or <- exp(y_hat_log) # on orginal scale
+y_hat_or <- exp(y_hat_log) # on original scale
 # scatterplot
 plot(x_T, y_T,
      main = "Data and fitted regression model",
@@ -32,7 +32,7 @@ plot(x_T, y_T,
      ylab = "y",
      pch = 16, col = "darkorange")
 ord <- order(x_T)
-lines(x_T[ord], y_hat[ord], lwd = 2, col = "cornflowerblue")
+lines(x_T[ord], y_hat_or[ord], lwd = 2, col = "cornflowerblue")
 legend("bottomright",
        legend = c("Observed data", "Fitted model"),
        pch    = c(16, NA),

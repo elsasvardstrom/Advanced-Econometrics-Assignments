@@ -13,9 +13,9 @@ X <- cbind(1, x_T, log(x_T))
 
 beta_hat <- solve(t(X) %*% X) %*% (t(X) %*% lny)
 round(beta_hat, digits = 4)
-# OLS-residualer ska vara ortogonala mot X:
+# OLS-residuals should be orthogonal against X:
 ehat <- lny - X %*% beta_hat
-t(X) %*% ehat # ska bli nästan 0
+t(X) %*% ehat # Will be next 0
 
 ### 1(b) Scatterplot ###
 # Fitted values from 1(a)

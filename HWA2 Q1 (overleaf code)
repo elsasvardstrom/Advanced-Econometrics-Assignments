@@ -1,0 +1,148 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath}
+\title{Homework Assignment 2 - Advanced Econometrics}
+\author{Elsa Svärdström}
+\date{March 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Question 1}
+\subsection{(a) Heuristic argument}
+Consider the partitioned data set $X = [X_1 : X_2]$. Let $R_1^2$ be the R-squared from regressing $y$ on $X_1$ and $R_2^2$ be the R-squared from regressing y on X. \\
+Show that $R_2^2 \leq R_1^2$ using a heuristic argument. That is, an informal but
+logically sound explanation e.g. you may use a geometric interpretation (with
+explanation or a supporting figure) or a numerical illustration.\\\\
+Let $\mathcal{S}_1=\text{Col}(X_1)$ and $\mathcal{S}_2=\text{Col}(X) = \text{Col}([X_1:X_2])$ \, .\\
+Since $X$ contains all columns of $X_1$ plus additional columns from $X_2$, we have
+$$
+\mathcal{S}_1 \subseteq \mathcal{S}_2\, .
+$$
+OLS can be interpreted as a projection of $y$ onto the column space of the regressors.
+Regressing $y$ on $X_1$ gives the projection $\hat y_1$ onto $\mathcal{S}_1$, with residual:
+$$
+\hat e_1 = y - \hat y_1\, ,
+\qquad
+SSR_1 = \|\hat e_1\|^2 \, .
+$$
+Regressing $y$ on $X = [X_1:X_2]$ gives the projection $\hat y_2$ onto the larger space $\mathcal{S}_2$, with residual
+$$
+\hat e_2 = y - \hat y_2\, ,
+\qquad
+SSR_2 = \|\hat e_2\|^2\, .
+$$
+Since $\mathcal{S}_1 \subseteq \mathcal{S}_2$, the minimization in the second regression is taken over a larger set. Therefore, the residual sum of squares cannot increase:
+$SSR_2 \leq SSR_1\, .$
+Because
+$$R^2 = 1 - \frac{SSR}{TSS}\, ,$$
+and $TSS$ is the same in both regressions, it follows directly that
+$$R_2^2 \leq R_1^2$$
+Thus, adding regressors cannot decrease $R^2$.
+\newpage
+\subsection{(b) Rigorously prove that $R_2^2 \leq R_1^2$}
+We consider two regressions:
+\begin{itemize}
+    \item Model 1: regress y on $X_1$.
+    \item Model 2: regress y on $X = [X_1 : X_2]$
+\end{itemize}
+We assume that $X_1'X_1$ and $X'X$ are invertible.\\\\
+\textbf{Step 1: Reduce the problem to comparing SSR}\\
+We know that:
+$$
+R^2 = 1 - \frac{SSR}{TSS}\, ,
+$$
+where
+$$
+SSR = \hat e' \hat e
+$$
+and $TSS$ depends only on $y$. Therefore, $TSS$ is the same in both regressions, so:
+$$
+R_2^2 \ge R_1^2
+$$
+is equivalent to
+$$
+SSR_2 \le SSR_1 \, .
+$$
+Thus, it is enough to prove that the residual sum of squares in the full model is smaller (or equal).\\\\
+\textbf{Step 2: Show that $X'\hat e_2 = 0$}
+In the full model,
+$$
+\hat\beta = (X'X)^{-1}X'y.
+$$
+The residual is
+$$
+\hat e_2 = y - X\hat\beta.
+$$
+Multiply by X':
+$$
+X'\hat e_2 = X'(y - X\hat\beta)
+= X'y - X'X\hat\beta.
+$$
+Substitute the formula for $\hat\beta$:
+$$
+X'X\hat\beta = X'X (X'X)^{-1} X'y = X'y.
+$$
+Therefore,
+$$
+X'\hat e_2 = X'y - X'y = 0.
+$$
+So the residual from the full model is orthogonal to all columns of $X$.\\\\
+\textbf{Step 3: Compare the two residuals}
+Let
+$$
+\hat e_1 = y - X_1\hat\beta_1
+$$
+be the residual from the first model. Now write
+$$
+\hat e_1 = \hat e_2 + (\hat e_1 - \hat e_2).
+$$
+We compute:
+$$
+\hat e_1 - \hat e_2
+= (y - X_1\hat\beta_1) - (y - X\hat\beta)
+= X\hat\beta - X_1\hat\beta_1.
+$$
+This is a linear combination of columns of $X$. So,
+$$
+\hat e_1 - \hat e_2 \in \text{Col}(X).
+$$
+But from Step 2, we know that $\hat e_2$ is orthogonal to $\text{Col}(X)$. Therefore,
+$$
+\hat e_2'(\hat e_1 - \hat e_2) = 0.
+$$
+\textbf{Step 4: Expand $SSR_1$}
+$$
+SSR_1 = \hat e_1'\hat e_1.
+$$
+Substitute $\hat e_1 = \hat e_2 + (\hat e_1 - \hat e_2)$:
+$$
+SSR_1 = (\hat e_2 + (\hat e_1 - \hat e_2))' (\hat e_2 + (\hat e_1 - \hat e_2)).
+$$
+Expanding gives:
+$$
+SSR_1 = \hat e_2'\hat e_2 + 2\hat e_2'(\hat e_1 - \hat e_2) + (\hat e_1 - \hat e_2)'(\hat e_1 - \hat e_2)
+$$
+The middle term is zero (orthogonality), so:
+$$
+SSR_1
+= \hat e_2'\hat e_2
++ (\hat e_1 - \hat e_2)'(\hat e_1 - \hat e_2).
+$$
+The last term is a squared norm, so it is always non-negative. Therefore,
+$$
+SSR_1 \ge \hat e_2'\hat e_2 = SSR_2.
+$$
+\textbf{Final conclusion}
+Since
+$$
+SSR_2 \le SSR_1,
+$$
+it follows that
+$$
+R_2^2 \ge R_1^2.
+$$
+Thus, adding regressors cannot decrease $R^2$.
+\end{document}
+
